@@ -226,10 +226,18 @@ class LocationManagerClient implements LocationClient, LocationListener {
 
     String provider = locationManager.getBestProvider(criteria, true);
 
-    if (provider.trim().isEmpty()) {
+//    if (provider.trim().isEmpty()) {
+//      List<String> providers = locationManager.getProviders(true);
+//      if (providers.size() > 0) provider = providers.get(0);
+//    }
+
+      // 修改源码,优选走网络定位
       List<String> providers = locationManager.getProviders(true);
-      if (providers.size() > 0) provider = providers.get(0);
-    }
+      if (providers.contains(LocationManager.NETWORK_PROVIDER)) {
+          provider = LocationManager.NETWORK_PROVIDER;
+      } else if (providers.contains(LocationManager.GPS_PROVIDER)) {
+          provider = LocationManager.GPS_PROVIDER;
+      }
 
     return provider;
   }
